@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import {
   User, Mail, Phone, MapPin, Calendar, Edit3, Save, X, CheckCircle2,
-  Lock, RefreshCw, Send, ShieldCheck, Smartphone
+  Lock, Send, ShieldCheck, Smartphone, Building2, DoorOpen, Stethoscope
 } from "lucide-react";
 
-export const PatientProfile = () => {
+export const DoctorProfile = () => {
   const { user } = useAuth();
 
-  // Trạng thái bật/tắt chế độ chỉnh sửa thông tin cá nhân
   const [isEditing, setIsEditing] = useState(false);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    specialty: "",
+    room: "",
     dob: "",
     address: ""
   });
@@ -23,6 +23,8 @@ export const PatientProfile = () => {
     name: "",
     email: "",
     phone: "",
+    specialty: "",
+    room: "",
     dob: "",
     address: ""
   });
@@ -31,12 +33,12 @@ export const PatientProfile = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Modal 1: OTP khi Cập nhật Email / Số điện thoại
+  // Modal OTP khi thay đổi Email/SĐT
   const [showProfileOtpModal, setShowProfileOtpModal] = useState(false);
   const [profileOtp, setProfileOtp] = useState(["", "", "", "", "", ""]);
   const [profileOtpError, setProfileOtpError] = useState("");
 
-  // Modal 2: Đổi Mật Khẩu qua OTP SĐT
+  // Modal Đổi Mật Khẩu qua OTP SĐT
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [pwdStep, setPwdStep] = useState(1);
   const [pwdOtp, setPwdOtp] = useState(["", "", "", "", "", ""]);
@@ -45,18 +47,18 @@ export const PatientProfile = () => {
     confirmPassword: ""
   });
   const [modalError, setModalError] = useState("");
-
-  // Đếm ngược OTP
   const [countdown, setCountdown] = useState(60);
 
   useEffect(() => {
     if (user) {
       const data = {
-        name: user.name || "Nguyễn Văn An",
-        email: user.email || "patient@mediq.ai",
-        phone: user.phone || "0912 345 678",
-        dob: user.dob || "1992-05-15",
-        address: user.address || "Cầu Giấy, Hà Nội"
+        name: user.name || "BS. Lê Hoài Nam",
+        email: user.email || "doctor@mediq.ai",
+        phone: user.phone || "0988 777 666",
+        specialty: user.specialty || "Khoa Tim mạch",
+        room: user.room || "Phòng 201 - Tầng 2",
+        dob: user.dob || "1985-08-20",
+        address: user.address || "Tây Hồ, Hà Nội"
       };
       setFormData(data);
       setInitialData(data);
@@ -87,11 +89,9 @@ export const PatientProfile = () => {
     setIsEditing(false);
   };
 
-  // Submit cập nhật thông tin
   const handleProfileSubmit = (e) => {
     e.preventDefault();
 
-    // Kiểm tra xem có thay đổi Email hoặc Số điện thoại (hoặc cả hai) hay không
     const isSensitiveInfoChanged =
       formData.email !== initialData.email || formData.phone !== initialData.phone;
 
@@ -113,7 +113,6 @@ export const PatientProfile = () => {
     }
   };
 
-  // Xác nhận OTP cho Email / Số điện thoại
   const handleVerifyProfileOtp = (e) => {
     e.preventDefault();
     setProfileOtpError("");
@@ -135,7 +134,6 @@ export const PatientProfile = () => {
     }, 1000);
   };
 
-  // Xử lý đổi mật khẩu
   const handleRequestPasswordOtp = () => {
     setModalError("");
     setIsSubmitting(true);
@@ -184,7 +182,7 @@ export const PatientProfile = () => {
     newOtp[index] = value;
     setOtpArray(newOtp);
     if (value !== "" && index < 5) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
+      const nextInput = document.getElementById(`doc-otp-input-${index + 1}`);
       if (nextInput) nextInput.focus();
     }
   };
@@ -204,20 +202,20 @@ export const PatientProfile = () => {
         </div>
       )}
 
-      {/* 1. CARD THÔNG TIN CÁ NHÂN CƠ BẢN */}
+      {/* 1. CARD THÔNG TIN CÁ NHÂN BÁC SĨ */}
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
         <form onSubmit={handleProfileSubmit}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
             <div className="flex items-center gap-4">
               <img
-                src={user?.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150"}
+                src={user?.avatar || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150"}
                 alt={formData.name}
-                className="w-16 h-16 rounded-full object-cover ring-2 ring-cyan-500/30 border border-slate-200 shrink-0"
+                className="w-16 h-16 rounded-full object-cover ring-2 ring-emerald-500/30 border border-slate-200 shrink-0"
               />
               <div>
                 {isEditing ? (
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-400 uppercase mb-1">Họ và tên</label>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase mb-1">Họ và tên Bác sĩ</label>
                     <input
                       type="text"
                       name="name"
@@ -229,9 +227,14 @@ export const PatientProfile = () => {
                   </div>
                 ) : (
                   <>
-                    <h1 className="text-xl font-bold text-slate-900">{formData.name}</h1>
+                    <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                      {formData.name}
+                      <span className="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold border border-emerald-200">
+                        Bác sĩ Chuyên khoa
+                      </span>
+                    </h1>
                     <p className="text-xs text-cyan-700 font-mono font-bold mt-0.5">
-                      Mã Bệnh Nhân: {user?.medicalCode || "PAT-88291"}
+                      Mã Bác Sĩ: {user?.doctorCode || "DOC-99102"}
                     </p>
                   </>
                 )}
@@ -278,12 +281,50 @@ export const PatientProfile = () => {
             </div>
           </div>
 
-          {/* Lưới 4 ô thông tin cơ bản */}
+          {/* Lưới Thông Tin Cơ Bản & Chuyên Môn Bác Sĩ */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 text-sm">
+            {/* Khoa */}
+            <div className="p-3.5 bg-cyan-50/50 rounded-xl border border-cyan-100">
+              <span className="text-xs text-cyan-700 block font-bold flex items-center gap-1.5 mb-1">
+                <Building2 className="w-3.5 h-3.5 text-cyan-600" /> Khoa phụ trách:
+              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="specialty"
+                  required
+                  value={formData.specialty}
+                  onChange={handleChange}
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-900 font-semibold text-sm focus:outline-none focus:border-cyan-500"
+                />
+              ) : (
+                <span className="text-slate-900 font-bold">{formData.specialty}</span>
+              )}
+            </div>
+
+            {/* Phòng khám */}
+            <div className="p-3.5 bg-cyan-50/50 rounded-xl border border-cyan-100">
+              <span className="text-xs text-cyan-700 block font-bold flex items-center gap-1.5 mb-1">
+                <DoorOpen className="w-3.5 h-3.5 text-cyan-600" /> Phòng khám làm việc:
+              </span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="room"
+                  required
+                  value={formData.room}
+                  onChange={handleChange}
+                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-900 font-semibold text-sm focus:outline-none focus:border-cyan-500"
+                />
+              ) : (
+                <span className="text-slate-900 font-bold">{formData.room}</span>
+              )}
+            </div>
+
             {/* Email */}
             <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
               <span className="text-xs text-slate-500 block font-medium flex items-center gap-1.5 mb-1">
-                <Mail className="w-3.5 h-3.5 text-slate-400" /> Email tài khoản:
+                <Mail className="w-3.5 h-3.5 text-slate-400" /> Email công tác:
               </span>
               {isEditing ? (
                 <input
@@ -302,7 +343,7 @@ export const PatientProfile = () => {
             {/* Số điện thoại */}
             <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
               <span className="text-xs text-slate-500 block font-medium flex items-center gap-1.5 mb-1">
-                <Phone className="w-3.5 h-3.5 text-slate-400" /> Số điện thoại:
+                <Phone className="w-3.5 h-3.5 text-slate-400" /> Số điện thoại liên hệ:
               </span>
               {isEditing ? (
                 <input
@@ -340,7 +381,7 @@ export const PatientProfile = () => {
             {/* Địa chỉ */}
             <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
               <span className="text-xs text-slate-500 block font-medium flex items-center gap-1.5 mb-1">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" /> Địa chỉ cư trú:
+                <MapPin className="w-3.5 h-3.5 text-slate-400" /> Địa chỉ liên lạc:
               </span>
               {isEditing ? (
                 <input
@@ -359,7 +400,7 @@ export const PatientProfile = () => {
         </form>
       </div>
 
-      {/* 2. KHU VỰC BẢO MẬT & ĐỔI MẬT KHẨU */}
+      {/* 2. KHU VỰC ĐỔI MẬT KHẨU BÁC SĨ */}
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
@@ -369,7 +410,7 @@ export const PatientProfile = () => {
             <div>
               <h3 className="text-base font-bold text-slate-900">Mật khẩu & Bảo mật</h3>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                Đổi mật khẩu định kỳ giúp tăng cường bảo mật cho tài khoản hồ sơ bệnh án của bạn.
+                Thường xuyên cập nhật mật khẩu để bảo mật dữ liệu thăm khám và hồ sơ bệnh nhân.
               </p>
             </div>
           </div>
@@ -388,7 +429,7 @@ export const PatientProfile = () => {
         </div>
       </div>
 
-      {/* MODAL OTP KHI THAY ĐỔI EMAIL / SỐ ĐIỆN THOẠI */}
+      {/* MODAL OTP KHI THAY ĐỔI EMAIL / SĐT BÁC SĨ */}
       {showProfileOtpModal && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-md p-6 space-y-5">
@@ -401,7 +442,6 @@ export const PatientProfile = () => {
               </button>
             </div>
 
-            {/* Thông báo chuẩn theo yêu cầu */}
             <p className="text-xs text-slate-600 leading-relaxed">
               Để thực hiện thay đổi, MEDIQ AI sẽ gửi mã SMS OTP gồm 6 chữ số đến số điện thoại: <b className="text-slate-900 font-bold">{formData.phone}</b>
             </p>
@@ -417,7 +457,7 @@ export const PatientProfile = () => {
                 {profileOtp.map((digit, index) => (
                   <input
                     key={index}
-                    id={`otp-input-${index}`}
+                    id={`doc-otp-input-${index}`}
                     type="text"
                     maxLength="1"
                     value={digit}
@@ -453,7 +493,7 @@ export const PatientProfile = () => {
         </div>
       )}
 
-      {/* MODAL ĐỔI MẬT KHẨU BẢO MẬT */}
+      {/* MODAL ĐỔI MẬT KHẨU BÁC SĨ */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl w-full max-w-md p-6 space-y-5">
@@ -461,10 +501,7 @@ export const PatientProfile = () => {
               <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-cyan-600" /> Đổi Mật Khẩu (Xác Thực SMS)
               </h3>
-              <button
-                onClick={() => setShowPasswordModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
-              >
+              <button onClick={() => setShowPasswordModal(false)} className="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -506,7 +543,7 @@ export const PatientProfile = () => {
                     {pwdOtp.map((digit, index) => (
                       <input
                         key={index}
-                        id={`pwd-otp-input-${index}`}
+                        id={`doc-pwd-otp-${index}`}
                         type="text"
                         maxLength="1"
                         value={digit}

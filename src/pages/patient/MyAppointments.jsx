@@ -56,7 +56,8 @@ export const MyAppointments = () => {
             <option value="ALL">Tất cả trạng thái</option>
             <option value="Xác nhận">Xác nhận</option>
             <option value="Đang chờ">Đang chờ</option>
-            <option value="Đã xong">Đã xong</option>
+            <option value="Đã hoàn thành">Đã hoàn thành</option>
+            <option value="Đã hủy">Đã hủy</option>
           </select>
         </div>
 

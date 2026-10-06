@@ -37,8 +37,10 @@ export const MOCK_ACCOUNTS = [
 ];
 
 export const MOCK_SPECIALTIES = [
-  { id: 1, name: "Tim mạch", icon: "Heart", doctorsCount: 8, room: "Khu A - Tầng 2" },
-  { id: 2, name: "Nội khoa", icon: "Stethoscope", doctorsCount: 12, room: "Khu A - Tầng 1" },
-  { id: 3, name: "Ngoại khoa", icon: "Activity", doctorsCount: 6, room: "Khu B - Tầng 3" },
-  { id: 4, name: "Da liễu", icon: "Sparkles", doctorsCount: 5, room: "Khu C - Tầng 1" }
+  { id: 1, name: "Tim mạch", icon: "Heart", doctorsCount: 8, room: "Khu A - Tầng 2", description: "Chẩn đoán và điều trị các bệnh lý tim mạch", color: "rose", patientsThisMonth: 142 },
+  { id: 2, name: "Nội khoa", icon: "Stethoscope", doctorsCount: 12, room: "Khu A - Tầng 1", description: "Khám và điều trị các bệnh nội tạng không cần phẫu thuật", color: "cyan", patientsThisMonth: 218 },
+  { id: 3, name: "Ngoại khoa", icon: "Activity", doctorsCount: 6, room: "Khu B - Tầng 3", description: "Phẫu thuật và can thiệp ngoại khoa", color: "amber", patientsThisMonth: 89 },
+  { id: 4, name: "Da liễu", icon: "Sparkles", doctorsCount: 5, room: "Khu C - Tầng 1", description: "Chẩn đoán và điều trị các bệnh về da", color: "purple", patientsThisMonth: 95 },
+  { id: 5, name: "Thần kinh", icon: "Brain", doctorsCount: 7, room: "Khu B - Tầng 2", description: "Điều trị các bệnh lý về hệ thần kinh trung ương và ngoại biên", color: "indigo", patientsThisMonth: 76 },
+  { id: 6, name: "Nhi khoa", icon: "Baby", doctorsCount: 9, room: "Khu C - Tầng 2", description: "Chăm sóc sức khỏe trẻ em từ sơ sinh đến 16 tuổi", color: "emerald", patientsThisMonth: 189 },
 ];

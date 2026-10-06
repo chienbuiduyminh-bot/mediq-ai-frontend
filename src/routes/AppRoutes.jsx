@@ -20,9 +20,13 @@ import { PatientMedicalRecords } from "../pages/patient/PatientMedicalRecords";
 import { PatientProfile } from "../pages/patient/PatientProfile";
 
 // Doctor Pages
+import { DoctorDashboard } from "../pages/doctor/DoctorDashboard";
 import { DoctorWorkspace } from "../pages/doctor/DoctorWorkspace";
 import { DoctorPatients } from "../pages/doctor/DoctorPatients";
 import { DoctorSchedules } from "../pages/doctor/DoctorSchedules";
+import { DoctorAppointments } from "../pages/doctor/DoctorAppointments";
+import { DoctorMedicalRecords } from "../pages/doctor/DoctorMedicalRecords";
+import { DoctorProfile } from "../pages/doctor/DoctorProfile";
 
 // Admin Pages
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
@@ -81,10 +85,14 @@ export const AppRoutes = () => {
             <RoleProtectedRoute allowedRoles={["DOCTOR"]}>
               <DashboardLayout>
                 <Routes>
+                  <Route path="dashboard" element={<DoctorDashboard />} />
                   <Route path="workspace" element={<DoctorWorkspace />} />
-                  <Route path="patients" element={<DoctorPatients />} />
                   <Route path="schedules" element={<DoctorSchedules />} />
-                  <Route path="*" element={<Navigate to="workspace" replace />} />
+                  <Route path="appointments" element={<DoctorAppointments />} />
+                  <Route path="patients" element={<DoctorPatients />} />
+                  <Route path="records" element={<DoctorMedicalRecords />} />
+                  <Route path="profile" element={<DoctorProfile />} />
+                  <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </DashboardLayout>
             </RoleProtectedRoute>
